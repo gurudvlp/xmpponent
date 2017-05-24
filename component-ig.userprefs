@@ -1,0 +1,20 @@
+﻿<Properties StartupItem="component-ig/component-ig.csproj">
+  <AuthorInfo Name="Brian Murphy" Email="brian@gurudigitalsolutions.com" Copyright="2017 Brian Murphy" Company="" Trademark="" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="component-ig/Stanzas/InfoQuery.cs">
+    <Files>
+      <File FileName="component-ig/Program.cs" Line="4" Column="20" />
+      <File FileName="component-ig/Stanzas/Stanza.cs" Line="19" Column="67" />
+      <File FileName="component-ig/Stanzas/Presence.cs" Line="4" Column="28" />
+      <File FileName="component-ig/Stanzas/Message.cs" Line="4" Column="28" />
+      <File FileName="component-ig/Component/Component.cs" Line="11" Column="20" />
+      <File FileName="component-ig/Component/EchoBots.cs" Line="41" Column="4" />
+      <File FileName="component-ig/Stanzas/Receipt.cs" Line="4" Column="28" />
+      <File FileName="component-ig/Stanzas/InfoQuery.cs" Line="4" Column="28" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
