@@ -37,9 +37,27 @@ namespace xmpponent
 			set { _StanzaID = value; }
 		}
 
+		private bool _Debug = false;
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="xmpponent.Component"/> has debugging
+		/// information enabled.
+		/// </summary>
+		/// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
+		public bool Debug
+		{ get { return _Debug; } set { _Debug = value; } }
+
+		private bool _InfoText = true;
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="xmpponent.Component"/> should output
+		/// status information.
+		/// </summary>
+		/// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
+		public bool InfoText
+		{ get { return _InfoText; } set { _InfoText = value; } }
+
 		private bool _AutoSendReceipt = true;
 		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="componentig.Component"/> automatically
+		/// Gets or sets a value indicating whether this <see cref="xmpponent.Component"/> automatically
 		/// sends a receipt for each incoming message.
 		/// </summary>
 		/// <value><c>true</c> handles receipts automatically; otherwise, <c>false</c>.</value>
@@ -60,19 +78,19 @@ namespace xmpponent
 
 		public void Run()
 		{
-			Console.WriteLine("Launching component");
+			Console.WriteLine("Launching xmpponent");
 
 			onLoad();
 
 			if(this.ComponentAddress == "")
 			{
-				Console.WriteLine("A component address must be specified.");
+				DebugWrite("A component address must be specified.");
 				return;
 			}
 
 			if(this.ServerAddress == "")
 			{
-				Console.WriteLine("A server address must be specified.");
+				DebugWrite("A server address must be specified.");
 				return;
 			}
 
@@ -100,14 +118,14 @@ namespace xmpponent
 						}
 						else if(InBuffer.IndexOf(">") > 0)
 						{
-							//Console.WriteLine("'>' found in string.");
+							//DebugWrite("'>' found in string.");
 							InBuffer = InBuffer.Replace("<", "");
 							InBuffer = InBuffer.Replace(">", "");
 
 							String[] prts = InBuffer.Split(new char[]{' '}, StringSplitOptions.None);
 							if(prts[0].ToLower() == "stream:stream")
 							{
-								//Console.WriteLine("prts.len {0}", prts.Length);
+								//DebugWrite("prts.len {0}", prts.Length);
 
 								for(int eprt = 1; eprt < prts.Length; eprt++)
 								{
@@ -115,7 +133,7 @@ namespace xmpponent
 									string v;
 
 									GetTagKeyVal(prts[eprt], out k, out v);
-									//Console.WriteLine("k {0} v {1}", k, v);
+									//DebugWrite("k {0} v {1}", k, v);
 
 									if(k.ToLower() == "id")
 									{
@@ -130,7 +148,7 @@ namespace xmpponent
 										Byte[] data = System.Text.Encoding.ASCII.GetBytes(hndsh);
 										SockStream.Write(data, 0, data.Length);
 
-										//Console.WriteLine("Handshake sent to server.");
+										//DebugWrite("Handshake sent to server.");
 									}
 								}
 
@@ -139,7 +157,7 @@ namespace xmpponent
 							else
 							{
 								//	Invalid stream from server ?
-								Console.WriteLine("The xmpp server did not return a stream element.");
+								DebugWrite("The xmpp server did not return a stream element.");
 								dorun = false;
 							}
 
@@ -150,7 +168,7 @@ namespace xmpponent
 						//	Hands not yet shaken
 						if(InBuffer.IndexOf("<handshake/>") > -1)
 						{
-							Console.WriteLine("Connected and ready to go!");
+							DebugWrite("Connected and ready to go!");
 							Handsshaken = true;
 							InBuffer = InBuffer.Replace("<handshake/>", "");
 
@@ -165,8 +183,8 @@ namespace xmpponent
 
 						if(inStanza == null)
 						{
-							Console.WriteLine("Incoming stanza was not parsed (it's null).");
-							Console.WriteLine(InBuffer);
+							DebugWrite("Incoming stanza was not parsed (it's null).");
+							DebugWrite(InBuffer);
 						}
 						else if(inStanza.GetType() == typeof(Stanzas.Presence))
 						{
@@ -174,7 +192,7 @@ namespace xmpponent
 						}
 						else if(inStanza.GetType() == typeof(Stanzas.Message))
 						{
-							//Console.WriteLine("Message stanza received from server.");
+							//DebugWrite("Message stanza received from server.");
 
 							if(!((Stanzas.Message)inStanza).IsReceipt
 								&& !((Stanzas.Message)inStanza).IsPaused)
@@ -236,7 +254,7 @@ namespace xmpponent
 				{
 					TcpSocket = new TcpClient(ServerAddress, Port);
 
-					Console.WriteLine("Connected to {0}:{1}", ServerAddress, Port);
+					DebugWrite(String.Format("Connected to {0}:{1}", ServerAddress, Port));
 
 					SockStream = TcpSocket.GetStream();
 					string strmhead = "<stream:stream"+'\n'+
@@ -247,14 +265,14 @@ namespace xmpponent
 					Byte[] data = System.Text.Encoding.ASCII.GetBytes(strmhead);
 					SockStream.Write(data, 0, data.Length);
 
-					Console.WriteLine("Component >> Server Stream Initialized");
+					DebugWrite("Component >> Server Stream Initialized");
 
 				}
 				catch(Exception ex)
 				{
-					Console.WriteLine("Failed to connect to xmpp server.");
-					Console.WriteLine("Exception:");
-					Console.WriteLine(ex.Message);
+					DebugWrite("Failed to connect to xmpp server.");
+					DebugWrite("Exception:");
+					DebugWrite(ex.Message);
 					return false;
 				}
 			}
@@ -304,19 +322,19 @@ namespace xmpponent
 		{
 			if(message.To == "")
 			{
-				Console.WriteLine("SendMessage: Failed due to no recipient.");
+				DebugWrite("SendMessage: Failed due to no recipient.");
 				return false;
 			}
 
 			if(message.From == "")
 			{
-				Console.WriteLine("SendMessage: Failed due to no sender.");
+				DebugWrite("SendMessage: Failed due to no sender.");
 				return false;
 			}
 
 			if(message.Body == "")
 			{
-				Console.WriteLine("SendMessage: Failed due to no body.");
+				DebugWrite("SendMessage: Failed due to no body.");
 				return false;
 			}
 
@@ -339,20 +357,20 @@ namespace xmpponent
 		{
 			if(presence.From == "")
 			{
-				Console.WriteLine("SendPresence: Failed due to no sender.");
+				DebugWrite("SendPresence: Failed due to no sender.");
 				return false;
 			}
 
 			if(presence.To == "")
 			{
-				Console.WriteLine("SendPresence: Failed because components require a recipient.");
+				DebugWrite("SendPresence: Failed because components require a recipient.");
 				return false;
 			}
 
 			string tosend = presence.GenerateXML();
-			/*Console.WriteLine("-------------------");
-			Console.WriteLine(tosend);
-			Console.WriteLine("-------------------");*/
+			/*DebugWrite("-------------------");
+			DebugWrite(tosend);
+			DebugWrite("-------------------");*/
 			Byte[] data = System.Text.Encoding.ASCII.GetBytes(tosend);
 			SockStream.Write(data, 0, data.Length);
 			return true;
@@ -362,31 +380,49 @@ namespace xmpponent
 		{
 			if(receipt.To == "")
 			{
-				Console.WriteLine("SendReceipt: Failed due to no recipient.");
+				DebugWrite("SendReceipt: Failed due to no recipient.");
 				return false;
 			}
 
 			if(receipt.From == "")
 			{
-				Console.WriteLine("SendReceipt: Failed due to no sender.");
+				DebugWrite("SendReceipt: Failed due to no sender.");
 				return false;
 			}
 
 			if(receipt.MessageID == "")
 			{
-				Console.WriteLine("SendReceipt: Failed due to no message id.");
+				DebugWrite("SendReceipt: Failed due to no message id.");
 				return false;
 			}
 
 			string tosend = receipt.GenerateXML();
 
-			/*Console.WriteLine("Outgoing Message Receipt:");
-			Console.WriteLine(tosend);
-			Console.WriteLine("----------------------------");*/
+			/*DebugWrite("Outgoing Message Receipt:");
+			DebugWrite(tosend);
+			DebugWrite("----------------------------");*/
 			Byte[] data = System.Text.Encoding.ASCII.GetBytes(tosend);
 			SockStream.Write(data, 0, data.Length);
 
 			return true;
+		}
+
+		/// <summary>
+		/// Write debug information to stdout.
+		/// </summary>
+		/// <param name="text">Text to write.</param>
+		public virtual void DebugWrite(string text)
+		{
+			if(Debug) { Console.WriteLine(text); }
+		}
+
+		/// <summary>
+		/// Write an info message to stdout.
+		/// </summary>
+		/// <param name="text">Text to write.</param>
+		public virtual void DebugInfo(string text)
+		{
+			if(InfoText) { Console.WriteLine(text); }
 		}
 
 		/// <summary>
@@ -423,7 +459,7 @@ namespace xmpponent
 		/// <param name="message">Message.</param>
 		public virtual void onMessageReceived(Stanzas.Message message)
 		{
-			Console.WriteLine("onMessageReceived not implemented.");
+			DebugWrite("onMessageReceived not implemented.");
 		}
 
 		/// <summary>
@@ -432,7 +468,7 @@ namespace xmpponent
 		/// <param name="message">Message.</param>
 		public virtual void onMessageReceiptReceived(Stanzas.Message message)
 		{
-			Console.WriteLine("onMessageReceiptReceived not implemented.");
+			DebugWrite("onMessageReceiptReceived not implemented.");
 		}
 
 		/// <summary>
@@ -450,7 +486,7 @@ namespace xmpponent
 			else if(presence.pType.ToLower() == "") { onPresenceAvailable(presence); }
 			else
 			{
-				Console.WriteLine("Unknown Presence Type: {0}", presence.pType);
+				DebugWrite(String.Format("Unknown Presence Type: {0}", presence.pType));
 			}
 		}
 
@@ -461,7 +497,7 @@ namespace xmpponent
 		/// <param name="presence">Presence.</param>
 		public virtual void onSubscribeRequested(Stanzas.Presence presence)
 		{
-			Console.WriteLine("onSubscribeRequested not implemented.");
+			DebugWrite("onSubscribeRequested not implemented.");
 		}
 
 		/// <summary>
@@ -471,7 +507,7 @@ namespace xmpponent
 		/// <param name="presence">Presence.</param>
 		public virtual void onUnsubscribeRequested(Stanzas.Presence presence)
 		{
-			Console.WriteLine("onUnsubscribeRequested not implemented.");
+			DebugWrite("onUnsubscribeRequested not implemented.");
 		}
 
 		/// <summary>
@@ -481,7 +517,7 @@ namespace xmpponent
 		/// <param name="presence">Presence.</param>
 		public virtual void onSubscribeConfirmed(Stanzas.Presence presence)
 		{
-			Console.WriteLine("onSubscribeConfirmed not implemented.");
+			DebugWrite("onSubscribeConfirmed not implemented.");
 		}
 
 		/// <summary>
@@ -491,7 +527,7 @@ namespace xmpponent
 		/// <param name="presence">Presence.</param>
 		public virtual void onUnsubscribeConfirmed(Stanzas.Presence presence)
 		{
-			Console.WriteLine("onUnsubscribeConfirmed not implemented.");
+			DebugWrite("onUnsubscribeConfirmed not implemented.");
 		}
 
 		/// <summary>
@@ -501,7 +537,7 @@ namespace xmpponent
 		/// <param name="presence">Presence.</param>
 		public virtual void onPresenceUnavailable(Stanzas.Presence presence)
 		{
-			Console.WriteLine("onPresenceUnavailable not implemented.");
+			DebugWrite("onPresenceUnavailable not implemented.");
 		}
 
 		/// <summary>
@@ -511,7 +547,7 @@ namespace xmpponent
 		/// <param name="presence">Presence.</param>
 		public virtual void onPresenceAvailable(Stanzas.Presence presence)
 		{
-			Console.WriteLine("onPresenceAvailable not implemented.");
+			DebugWrite("onPresenceAvailable not implemented.");
 		}
 
 		/// <summary>
@@ -521,7 +557,7 @@ namespace xmpponent
 		/// <param name="presence">Presence.</param>
 		public virtual void onPresenceProbe(Stanzas.Presence presence)
 		{
-			Console.WriteLine("onPresenceProbe not implemented.");
+			DebugWrite("onPresenceProbe not implemented.");
 		}
 
 		/// <summary>
@@ -530,7 +566,7 @@ namespace xmpponent
 		/// <param name="iq">Iq.</param>
 		public virtual void onInfoQueryReceived(Stanzas.InfoQuery iq)
 		{
-			Console.WriteLine("onInfoQueryReceived not implemented.");
+			DebugWrite("onInfoQueryReceived not implemented.");
 		}
 
 		/// <summary>
@@ -539,7 +575,7 @@ namespace xmpponent
 		/// <param name="error">Error.</param>
 		public virtual void onStreamError(Stanzas.StreamError error)
 		{
-			Console.WriteLine("onStreamError not implemented.");
+			DebugWrite("onStreamError not implemented.");
 		}
 
 		/// <summary>
@@ -548,7 +584,7 @@ namespace xmpponent
 		/// <param name="streamend">Streamend.</param>
 		public virtual void onStreamEnd(Stanzas.StreamEnd streamend)
 		{
-			Console.WriteLine("Stream closed by server.  Good bye.");
+			DebugWrite("Stream closed by server.  Good bye.");
 		}
 
 		/// <summary>
@@ -558,7 +594,7 @@ namespace xmpponent
 		/// <param name="stanza">Stanza.</param>
 		public virtual void onUndefinedStanzaReceived(Stanzas.Stanza stanza)
 		{
-			Console.WriteLine("Undefined/blank stanza received from server.");
+			DebugWrite("Undefined/blank stanza received from server.");
 		}
 	}
 }

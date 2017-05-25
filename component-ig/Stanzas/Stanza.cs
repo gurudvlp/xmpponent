@@ -130,7 +130,7 @@ namespace xmpponent.Stanzas
 		private static StreamEnd CollectStreamEnd(ref string InBuffer)
 		{
 			
-			Console.WriteLine(InBuffer);
+			//Console.WriteLine(InBuffer);
 
 			InBuffer = InBuffer.Replace("</stream:stream>", "");
 

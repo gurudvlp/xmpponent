@@ -37,6 +37,18 @@ namespace xmpponent
 						if(parts[0].Trim().ToLower() == "componentaddress") { Component.Eng.ComponentAddress = parts[1].Trim(); }
 						if(parts[0].Trim().ToLower() == "serveraddress") { Component.Eng.ServerAddress = parts[1].Trim(); }
 						if(parts[0].Trim().ToLower() == "secret") { Component.Eng.Secret = parts[1].Trim(); }
+						if(parts[0].Trim().ToLower() == "autoreceipt")
+						{
+							if(parts[1].Trim().ToLower() == "true" || parts[1].Trim().ToLower() == "1") { Component.Eng.AutoSendReceipt= true; } else { Component.Eng.AutoSendReceipt = false; }
+						}
+						if(parts[0].Trim().ToLower() == "debug")
+						{
+							if(parts[1].Trim().ToLower() == "true" || parts[1].Trim().ToLower() == "1") { Component.Eng.Debug = true; } else { Component.Eng.Debug = false; }
+						}
+						if(parts[0].Trim().ToLower() == "info")
+						{
+							if(parts[1].Trim().ToLower() == "true" || parts[1].Trim().ToLower() == "1") { Component.Eng.InfoText = true; } else { Component.Eng.InfoText = false; }
+						}
 					}
 				}
 

@@ -1,5 +1,5 @@
-/home/guru/Projects/component-ig/component-ig/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
-/home/guru/Projects/component-ig/component-ig/bin/Debug/xmpponent.exe.mdb
-/home/guru/Projects/component-ig/component-ig/bin/Debug/xmpponent.exe
-/home/guru/Projects/component-ig/component-ig/obj/x86/Debug/xmpponent.exe
-/home/guru/Projects/component-ig/component-ig/obj/x86/Debug/xmpponent.exe.mdb
+/home/guru/Projects/xmpponent/component-ig/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/guru/Projects/xmpponent/component-ig/bin/Debug/xmpponent.exe.mdb
+/home/guru/Projects/xmpponent/component-ig/bin/Debug/xmpponent.exe
+/home/guru/Projects/xmpponent/component-ig/obj/x86/Debug/xmpponent.exe
+/home/guru/Projects/xmpponent/component-ig/obj/x86/Debug/xmpponent.exe.mdb

@@ -36,7 +36,7 @@ namespace xmpponent
 
 		public override void onConnect ()
 		{
-			//	This is were the xmpp server should be alerted that
+			//	This is where the xmpp server should be alerted that
 			//	there are a few bots online.
 
 			Stanzas.Presence presence = new Presence();
@@ -64,7 +64,7 @@ namespace xmpponent
 
 		public override void onMessageReceived (xmpponent.Stanzas.Message message)
 		{
-			Console.WriteLine("{0} => {1}: {2}", message.From, message.To, message.Body);
+			DebugInfo(String.Format("{0} => {1}: {2}", message.From, message.To, message.Body));
 
 			if(message.To.ToLower() == "echo@" + ComponentAddress.ToLower()
 				|| message.To.ToLower().StartsWith("echo@" + ComponentAddress.ToLower() + "/"))
@@ -86,7 +86,7 @@ namespace xmpponent
 			//	callbacks.  So, unless you have a reason, there is really
 			//	not a point in overriding this method.
 
-			Console.WriteLine("{0}: [Presence] {1}", presence.From, presence.pType);
+			DebugInfo(String.Format("{0}: [Presence] {1}", presence.From, presence.pType));
 
 			base.onPresenceReceived(presence);
 		}
@@ -108,7 +108,7 @@ namespace xmpponent
 
 		public override void onPresenceAvailable (Presence presence)
 		{
-			Console.WriteLine("[{0}] Available: {1} {2}", presence.From, presence.ShowToString(), presence.Status);
+			DebugInfo(String.Format("[{0}] Available: {1} {2}", presence.From, presence.ShowToString(), presence.Status));
 
 			if(presence.To.ToLower().StartsWith("echo@" + ComponentAddress))
 			{
@@ -128,15 +128,15 @@ namespace xmpponent
 
 		public override void onPresenceUnavailable (Presence presence)
 		{
-			Console.WriteLine("[{0}] Unavailable", presence.From);
+			DebugInfo(String.Format("[{0}] Unavailable", presence.From));
 		}
 
 		public override void onInfoQueryReceived (xmpponent.Stanzas.InfoQuery iq)
 		{
-			Console.WriteLine("InfoQuery received, but I dunno about those yet.");
-			Console.WriteLine("Here is the raw xml:");
-			Console.WriteLine(iq.RawXML);
-			Console.WriteLine("---------------------------------");
+			DebugWrite("InfoQuery received, but I dunno about those yet.");
+			DebugWrite("Here is the raw xml:");
+			DebugWrite(iq.RawXML);
+			DebugWrite("---------------------------------");
 		}
 
 		public override void onMessageReceiptReceived (Message message)
@@ -149,7 +149,7 @@ namespace xmpponent
 		{
 			if(presence.To.ToLower().StartsWith("echo@" + ComponentAddress))
 			{
-				Console.WriteLine("[{0}] requested a subscription to {1}", presence.From, presence.To);
+				DebugInfo(String.Format("[{0}] requested a subscription to {1}", presence.From, presence.To));
 
 				if(!Subscribers.Contains(presence.From)) { Subscribers.Add(presence.From); }
 				string newfrom = presence.To;
