@@ -561,12 +561,51 @@ namespace xmpponent
 		}
 
 		/// <summary>
-		/// Called each time an info query is received.
+		/// Called each time an info query is received.  This method determines
+		/// the type of query, and calls the appropriate callback.
+		///
+		/// This should only be overridden if you know why you are overriding
+		/// it.
 		/// </summary>
-		/// <param name="iq">Iq.</param>
+		/// <param name="iq">InfoQuery.</param>
 		public virtual void onInfoQueryReceived(Stanzas.InfoQuery iq)
 		{
 			DebugWrite("onInfoQueryReceived not implemented.");
+			if(iq.qType.ToLower() == "get")
+			{
+				if(iq.iType.ToLower() == "disco#info") { onDiscoQueryReceived(iq); }
+				else if(iq.iType.ToLower() == "vcard") { onVCardQueryReceived(iq); }
+				else { onUnknownInfoQueryReceived(iq); }
+			}
+			else
+			{
+				onUnknownInfoQueryReceived(iq);
+			}
+		}
+
+		/// <summary>
+		/// Called when an info query seeking information on available
+		/// services is received.
+		/// </summary>
+		/// <param name="iq">Iq.</param>
+		public virtual void onDiscoQueryReceived(Stanzas.InfoQuery iq)
+		{
+			DebugWrite("onDiscoQueryReceived not implemented.");
+		}
+
+		/// <summary>
+		/// Called when a remote user is attempting to retrieve a
+		/// component user's vCard.
+		/// </summary>
+		/// <param name="iq">Iq.</param>
+		public virtual void onVCardQueryReceived(Stanzas.InfoQuery iq)
+		{
+			DebugWrite("onVCardQueryReceived not implemented.");
+		}
+
+		public virtual void onUnknownInfoQueryReceived(Stanzas.InfoQuery iq)
+		{
+			DebugWrite("onUnknownInfoQueryReceived not implemented.");
 		}
 
 		/// <summary>
