@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{0D6B2577-DF12-4723-B0DC-087882CC2B0C}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>componentig</RootNamespace>
+    <RootNamespace>xmpponent</RootNamespace>
     <AssemblyName>xmpponent</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <Description>Component framework for XMPP servers.</Description>

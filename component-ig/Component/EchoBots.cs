@@ -131,6 +131,15 @@ namespace xmpponent
 			DebugInfo(String.Format("[{0}] Unavailable", presence.From));
 		}
 
+		public override void onUnknownPresenceReceived (Presence presence)
+		{
+			DebugInfo(String.Format("[{0}] Unknown Presence", presence.From));
+
+			//DebugInfo(String.Format("[{0}] Unknown Presence Received:", presence.From));
+			//DebugInfo(presence.RawXML);
+			//DebugInfo("--------------------");
+		}
+
 		public override void onInfoQueryReceived (xmpponent.Stanzas.InfoQuery iq)
 		{
 			//	The base method for onInfoQueryReceived does the routing for

@@ -484,10 +484,7 @@ namespace xmpponent
 			else if(presence.pType.ToLower() == "probe") { onPresenceProbe(presence); }
 			else if(presence.pType.ToLower() == "unavailable") { onPresenceUnavailable(presence); }
 			else if(presence.pType.ToLower() == "") { onPresenceAvailable(presence); }
-			else
-			{
-				DebugWrite(String.Format("Unknown Presence Type: {0}", presence.pType));
-			}
+			else { onUnknownPresenceReceived(presence); }
 		}
 
 		/// <summary>
@@ -558,6 +555,16 @@ namespace xmpponent
 		public virtual void onPresenceProbe(Stanzas.Presence presence)
 		{
 			DebugWrite("onPresenceProbe not implemented.");
+		}
+
+		/// <summary>
+		/// Called when a presence stanza is received that is not
+		/// recognized by the core xmpponent.
+		/// </summary>
+		/// <param name="presence">Presence.</param>
+		public virtual void onUnknownPresenceReceived(Stanzas.Presence presence)
+		{
+			DebugWrite("onUnknownPresenceReceived not implemented.");
 		}
 
 		/// <summary>
