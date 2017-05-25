@@ -570,7 +570,6 @@ namespace xmpponent
 		/// <param name="iq">InfoQuery.</param>
 		public virtual void onInfoQueryReceived(Stanzas.InfoQuery iq)
 		{
-			DebugWrite("onInfoQueryReceived not implemented.");
 			if(iq.qType.ToLower() == "get")
 			{
 				if(iq.iType.ToLower() == "disco#info") { onDiscoQueryReceived(iq); }
