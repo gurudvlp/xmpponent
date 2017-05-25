@@ -133,10 +133,24 @@ namespace xmpponent
 
 		public override void onInfoQueryReceived (xmpponent.Stanzas.InfoQuery iq)
 		{
-			DebugWrite("InfoQuery received, but I dunno about those yet.");
-			DebugWrite("Here is the raw xml:");
-			DebugWrite(iq.RawXML);
-			DebugWrite("---------------------------------");
+			//	The base method for onInfoQueryReceived does the routing for
+			//	appropriate callbacks.  So this method doesn't need to be
+			//	overridden unless you have a specific need for it.
+			base.onInfoQueryReceived(iq);
+		}
+
+		public override void onVCardQueryReceived (InfoQuery iq)
+		{
+			//	xmpponent currently does not have built in support for vCards,
+			//	but you could bake your own support in here.
+			DebugInfo(String.Format("[{0}] requests a vCard for [{1}]", iq.From, iq.To));
+		}
+
+		public override void onDiscoQueryReceived (InfoQuery iq)
+		{
+			//	xmpponent currently does not have built in support for disco
+			//	queries, but it could be built here.
+			DebugInfo(String.Format("[{0}] requests disco information", iq.From));
 		}
 
 		public override void onMessageReceiptReceived (Message message)
