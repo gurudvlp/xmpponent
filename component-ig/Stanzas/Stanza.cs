@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.IO;
 
 namespace xmpponent.Stanzas
 {
@@ -9,8 +12,21 @@ namespace xmpponent.Stanzas
 		public string RawXML
 		{ get { return _RawXML; } set { _RawXML = value; } }
 
+		private string _Element = "";
+		public string Element
+		{ get { return _Element; } set { _Element = value; } }
+
+		public Dictionary<string, string> Attributes;
+		public Dictionary<string, Stanza> Elements;
+
+		private string _InternalXML = "";
+		public string InternalXML
+		{ get { return _InternalXML; } set { _InternalXML = value; } }
+
 		public Stanza ()
 		{
+			Attributes = new Dictionary<string, string>();
+			Elements = new Dictionary<string, Stanza>();
 		}
 
 		public static Stanza Parse(ref string InBuffer)
@@ -32,6 +48,89 @@ namespace xmpponent.Stanzas
 			else if(InBuffer.StartsWith("</stream:stream")) { return CollectStreamEnd(ref InBuffer); }
 			else if(InBuffer.EndsWith("</stream:stream>")) { return CollectStreamEnd(ref InBuffer); }
 			return null;
+		}
+
+		public static Stanza xParse(ref string InBuffer)
+		{
+			if(InBuffer.Length < 3) { return null; }
+			if(InBuffer.Substring(0, 1) != "<") { return null; }
+
+			string elname = "";
+			for(int el = 1; el < InBuffer.Length; el++)
+			{
+				/*if(InBuffer.Substring(el, 1) == "/")
+				{
+
+				}
+				else if(InBuffer.Substring(el, 1) == " ")
+				{
+
+				}
+				else if(InBuffer.Substring(el, 1) == ">")
+				{
+
+				}
+				else*/
+				if(InBuffer.Substring(el, 1) != "/"
+					&& InBuffer.Substring(el, 1) != " "
+					&& InBuffer.Substring(el, 1) != ">")
+				{
+					elname += InBuffer.Substring(el, 1);
+				}
+				else { break; }
+			}
+
+			string[] elattrs = InBuffer.Split(new char[]{'>'}, 2);
+			if(elattrs.Length == 1) { return null; }
+
+			Stanza toret = new Stanza();
+			if(elname == "iq") { toret = new InfoQuery(); }
+			else if(elname == "message") { toret = new Message(); }
+			else if(elname == "presence") { toret = new Presence(); }
+			else if(elname == "stream:error") { toret = new StreamError(); }
+			else if(elname == "stream:end") { toret = new StreamEnd(); }
+			toret.Element = elname;
+
+			int inbufremoval = 0;
+			if(InBuffer.IndexOf("/>") > InBuffer.IndexOf(">"))
+			{
+				toret.InternalXML = elattrs[1].Substring(0, elattrs[1].IndexOf("</" + elname));
+				inbufremoval += (3 + elname.Length);
+
+				string interbuf = toret.InternalXML;
+				while(interbuf != "")
+				{
+					Stanza eelem = Stanza.xParse(ref interbuf);
+					if(eelem != null)
+					{
+						toret.Elements.Add(eelem.Element, eelem);
+					}
+					else
+					{
+						interbuf = ""; 
+					}
+				}
+			}
+
+			string[] attrs = elattrs[0].Split(new char[]{' '}, StringSplitOptions.None);
+			if(attrs.Length > 1)
+			{
+				for(int eat = 1; eat < attrs.Length; eat++)
+				{
+					string[] kvp = attrs[eat].Split(new char[]{'='}, 2);
+					string nval = kvp[1].Trim().Substring(1);
+					if(nval.EndsWith("/")) { nval = nval.Substring(0, nval.Length - 1); }
+					nval = nval.Substring(0, nval.Length - 1);
+					toret.Attributes.Add(kvp[0].ToLower().Trim(), nval);
+					//Console.WriteLine("{0}: kvp {1} = '{2}'", toret.Element, kvp[0].ToLower().Trim(), nval);
+				}
+			}
+			//Console.WriteLine(toret.Element);
+
+			InBuffer = InBuffer.Substring(elattrs[0].Length + 1 + toret.InternalXML.Length + inbufremoval);
+
+
+			return toret;
 		}
 
 		public static void GetTagKeyVal(string tagkeyval, out string key, out string val)

@@ -93,6 +93,10 @@ namespace xmpponent
 
 		public override void onPresenceProbe (Presence presence)
 		{
+			DebugInfo(String.Format("[{0}] is probing for [{1}]'s presence.", presence.From, presence.To));
+			DebugInfo(presence.RawXML);
+			DebugInfo("--------------------");
+
 			Presence npres = new Presence();
 			npres.From = presence.To;
 			npres.To = presence.From;
