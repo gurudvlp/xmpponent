@@ -7,6 +7,26 @@ namespace xmpponent.Stanzas
 {
 	public class Stanza
 	{
+		public Dictionary<string, string> Attributes;
+		public Dictionary<string, Stanza> Elements;
+
+		public string To
+		{
+			get { if(!Attributes.ContainsKey("to")) { return ""; } else { return Attributes["to"]; } }
+			set { if(!Attributes.ContainsKey("to")) { Attributes.Add("to", value); } else { Attributes["to"] = value; } }
+		}
+
+		public string From
+		{
+			get { if(!Attributes.ContainsKey("from")) { return ""; } else { return Attributes["from"]; } }
+			set { if(!Attributes.ContainsKey("from")) { Attributes.Add("from", value); } else { Attributes["from"] = value; } }
+		}
+
+		public string Id
+		{
+			get { if(!Attributes.ContainsKey("id")) { return ""; } else { return Attributes["id"]; } }
+			set { if(!Attributes.ContainsKey("id")) { Attributes.Add("id", value); } else { Attributes["id"] = value; } }
+		}
 
 		private string _RawXML = "";
 		public string RawXML
@@ -16,8 +36,7 @@ namespace xmpponent.Stanzas
 		public string Element
 		{ get { return _Element; } set { _Element = value; } }
 
-		public Dictionary<string, string> Attributes;
-		public Dictionary<string, Stanza> Elements;
+		
 
 		private string _InternalXML = "";
 		public string InternalXML
@@ -35,19 +54,16 @@ namespace xmpponent.Stanzas
 			//<iq type='get' to='bot@comp.examle.com' from='doophus@example.com/r3s0urc3' id='2U7Rs-778'><vCard xmlns='vcard-temp'/></iq>
 			//<message type='chat' to='bot@comp.example.com' from='doophus@example.com/r3s0urc3' id='2U7Rs-821'><body>Poop a do</body><thread>yD47iRwN9A27</thread><active xmlns='http://jabber.org/protocol/chatstates'/><request xmlns='urn:xmpp:receipts'/><stanza-id id='a60fed2c-23d6-45a5-9e51-de5c888422c8' by='doophus@example.com' xmlns='urn:xmpp:sid:0'/></message>
 
-			if(InBuffer.Length  < 1) { return null; }
+			Stanza toret = Stanza.xParse(ref InBuffer);
 
-			//	Continue to let InBuffer fill up until the opening and closing
-			//	of the tag is present.
-			if(InBuffer.Substring(0, 1) != "<") { return null; }
-
-			if(InBuffer.StartsWith("<presence")) { return CollectPresence(ref InBuffer); }
-			else if(InBuffer.StartsWith("<message")) { return CollectMessage(ref InBuffer); }
-			else if(InBuffer.StartsWith("<iq")) { return CollectIq(ref InBuffer); }
-			else if(InBuffer.StartsWith("<stream:error")) { return CollectStreamError(ref InBuffer); }
-			else if(InBuffer.StartsWith("</stream:stream")) { return CollectStreamEnd(ref InBuffer); }
-			else if(InBuffer.EndsWith("</stream:stream>")) { return CollectStreamEnd(ref InBuffer); }
-			return null;
+			///TODO:
+			/// Create an appropriate way of handling a stream-end scenario.
+			/// 
+			if(InBuffer.EndsWith("</stream:stream>"))
+			{
+				InBuffer = "";
+			}
+			return toret;
 		}
 
 		public static Stanza xParse(ref string InBuffer)
@@ -193,7 +209,7 @@ namespace xmpponent.Stanzas
 			return toret;
 		}
 
-		private static Stanza CollectMessage(ref string InBuffer)
+		/*private static Stanza CollectMessage(ref string InBuffer)
 		{
 			if(InBuffer.IndexOf("</message>") == -1) { return null; }
 			string prline = InBuffer.Substring(0, InBuffer.IndexOf("</message>"));
@@ -202,7 +218,7 @@ namespace xmpponent.Stanzas
 			Message toret = Message.Parse(prline);
 
 			return toret;
-		}
+		}*/
 
 		private static Stanza CollectIq(ref string InBuffer)
 		{

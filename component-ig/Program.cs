@@ -55,12 +55,7 @@ namespace xmpponent
 				file.Close();
 			}
 
-			/*string InBuffer = "<iq type='get' to='bot@comp.examle.com' from='doophus@example.com/r3s0urc3' id='2U7Rs-778'><vCard xmlns='vcard-temp'/></iq>" +
-				"<presence type='subscribe' to='bot@comp.example.com' from='doophus@example.com' id='2U7Rs-773'/>" + 
-				"<message type='chat' to='bot@comp.example.com' from='doophus@example.com/r3s0urc3' id='2U7Rs-821'><body>Poop a do</body><thread>yD47iRwN9A27</thread><active xmlns='http://jabber.org/protocol/chatstates'/><request xmlns='urn:xmpp:receipts'/><stanza-id id='a60fed2c-23d6-45a5-9e51-de5c888422c8' by='doophus@example.com' xmlns='urn:xmpp:sid:0'/></message>";
 
-			Stanzas.Stanza stanza = Stanzas.Stanza.xParse(ref InBuffer);
-			*/
 			Component.Eng.Run();
 		}
 	}

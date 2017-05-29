@@ -9,23 +9,91 @@ namespace xmpponent.Stanzas
 		//<request xmlns='urn:xmpp:receipts'/>
 		//<received id='ytV2Q-443' xmlns='urn:xmpp:receipts'/>
 
-		public string mType = "";
-		public string To = "";
-		public string From = "";
-		public string Id = "";
-		public string Body = "";
-		public string Thread = "";
-		public string StanzaId = "";
-		public string StanzaBy = "";
-		public bool ReceiptRequested = false;
-		public bool IsReceipt = false;
-		public bool IsPaused = false;
+		public string mType
+		{
+			get { if(!Attributes.ContainsKey("type")) { return ""; } else { return Attributes["type"]; } }
+			set	{ if(!Attributes.ContainsKey("type")) { Attributes.Add("type", value); } else { Attributes["type"] = value; } }
+		}
+
+		public string Body
+		{
+			get { if(!Elements.ContainsKey("body")) { return ""; } else { return Elements["body"].InternalXML; } }
+			set 
+			{ 
+				if(!Elements.ContainsKey("body")) 
+				{
+					Stanza bstanz = new Stanza();
+					bstanz.InternalXML = value;
+					Elements.Add("body", bstanz);
+				} 
+				else 
+				{
+					Elements["body"].InternalXML = value; 
+				} 
+			}
+		}
+
+		public string Thread
+		{
+			get { if(!Elements.ContainsKey("thread")) { return ""; } else { return Elements["thread"].InternalXML; } }
+			set 
+			{ 
+				if(!Elements.ContainsKey("thread")) 
+				{
+					Stanza bstanz = new Stanza();
+					bstanz.InternalXML = value;
+					Elements.Add("thread", bstanz); 
+				} 
+				else 
+				{ 
+					Elements["thread"].InternalXML = value; 
+				} 
+			}
+		}
+
+		public string StanzaId
+		{
+			get { if(!Attributes.ContainsKey("stanzaid")) { return ""; } else { return Attributes["stanzaid"]; } }
+			set { if(!Attributes.ContainsKey("stanzaid")) { Attributes.Add("stanzaid", value); } else { Attributes["stanzaid"] = value; } }
+		}
+
+		public string StanzaBy
+		{
+			get { if(!Attributes.ContainsKey("stanzaby")) { return ""; } else { return Attributes["stanzaby"]; } }
+			set { if(!Attributes.ContainsKey("stanzaby")) { Attributes.Add("stanzaby", value); } else { Attributes["stanzaby"] = value; } }
+		}
+
+		public bool ReceiptRequested
+		{
+			get
+			{
+				if(Elements.ContainsKey("request"))
+				{
+					if(Elements["request"].Attributes.ContainsKey("xmlns"))
+					{
+						if(Elements["request"].Attributes["xmlns"].ToLower() == "urn:xmpp:receipts") { return true; }
+					}
+				}
+				return false;
+			}
+
+		}
+
+		public bool IsReceipt
+		{
+			get { if(Elements.ContainsKey("received")) { return true; } else { return false; } }
+		}
+
+		public bool IsPaused
+		{
+			get { if(Elements.ContainsKey("paused")) { return true; } else { return false; } }
+		}
 
 		public Message ()
 		{
 		}
 
-		public static Message Parse(string InBuffer)
+		/*public static Message Parse(string InBuffer)
 		{
 			Message toret = new Message();
 			toret.RawXML = InBuffer + "</message>";
@@ -98,7 +166,7 @@ namespace xmpponent.Stanzas
 			//Console.Write("Stanza: {0} {1}", toret.StanzaBy, toret.StanzaId);
 
 			return toret;
-		}
+		}*/
 
 		public override string GenerateXML ()
 		{

@@ -7,6 +7,7 @@ using System.Net;
 using System.Configuration;
 using System.Security.Permissions;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace xmpponent
 {
@@ -193,6 +194,17 @@ namespace xmpponent
 						else if(inStanza.GetType() == typeof(Stanzas.Message))
 						{
 							//DebugWrite("Message stanza received from server.");
+							/*DebugWrite("Attributes:");
+							foreach(KeyValuePair<string, string> kvp in inStanza.Attributes)
+							{
+								DebugWrite(String.Format("\t{0} = '{1}'", kvp.Key, kvp.Value));
+							}
+							DebugWrite("Elements (body):");
+							foreach(KeyValuePair<string, Stanzas.Stanza> kvp in inStanza.Elements["body"].Elements)
+							{
+								DebugWrite(String.Format("\t{0} = [{1}]", kvp.Key, kvp.Value.Element));
+							}
+							DebugWrite(String.Format("body internalXML {0}", inStanza.Elements["body"].InternalXML));*/
 
 							if(!((Stanzas.Message)inStanza).IsReceipt
 								&& !((Stanzas.Message)inStanza).IsPaused)
