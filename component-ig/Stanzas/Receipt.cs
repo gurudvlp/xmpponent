@@ -5,10 +5,29 @@ namespace xmpponent.Stanzas
 {
 	public class Receipt : Stanza
 	{
-		public string MessageID = "";
-		public string To = "";
-		public string From = "";
-		public string Thread = "";
+		public string MessageID
+		{
+			get { return Id; }
+			set { Id = value; }
+		}
+
+		public string Thread
+		{
+			get { if(!Elements.ContainsKey("thread")) { return ""; } else { return Elements["thread"].InternalXML; } }
+			set
+			{
+				if(!Elements.ContainsKey("thread"))
+				{
+					Stanza bstanz = new Stanza();
+					bstanz.InternalXML = value;
+					Elements.Add("thread", bstanz);
+				}
+				else
+				{
+					Elements["thread"].InternalXML = value;
+				}
+			}
+		}
 
 		public Receipt ()
 		{

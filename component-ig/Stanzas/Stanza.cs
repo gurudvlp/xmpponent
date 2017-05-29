@@ -165,7 +165,7 @@ namespace xmpponent.Stanzas
 
 		}
 
-		private static Stanza CollectPresence(ref string InBuffer)
+		/*private static Stanza CollectPresence(ref string InBuffer)
 		{
 			if(InBuffer.IndexOf("/>") == -1) { return null; }
 			string prline = InBuffer.Substring(0, InBuffer.IndexOf("/>"));
@@ -207,7 +207,7 @@ namespace xmpponent.Stanzas
 			toret.Id = id;
 
 			return toret;
-		}
+		}*/
 
 		/*private static Stanza CollectMessage(ref string InBuffer)
 		{

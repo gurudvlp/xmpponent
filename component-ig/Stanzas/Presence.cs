@@ -11,11 +11,29 @@ namespace xmpponent.Stanzas
 		public static uint ShowDND = 4;
 		public static uint ShowAvailable = 5;
 
-		public string To = "";
-		public string From = "";
-		public string Id = "";
-		public string pType = "";
-		public string Status = "";
+		public string pType
+		{
+			get { if(!Attributes.ContainsKey("type")) { return ""; } else { return Attributes["type"]; } }
+			set { if(!Attributes.ContainsKey("type")) { Attributes.Add("type", value); } else { Attributes["type"] = value; } }
+		}
+
+		public string Status
+		{
+			get { if(!Elements.ContainsKey("status")) { return ""; } else { return Elements["status"].InternalXML; } }
+			set 
+			{ 
+				if(!Elements.ContainsKey("status"))
+				{
+					Stanza bstanz = new Stanza();
+					bstanz.InternalXML = value;
+					Elements.Add("status", bstanz);
+				}
+				else
+				{
+					Elements["status"].InternalXML = value;
+				}
+			}
+		}
 		public uint ShowType = 3;
 		public bool Available = true;
 
