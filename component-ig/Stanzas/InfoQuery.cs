@@ -1,22 +1,41 @@
 ﻿using System;
 using xmpponent.Stanzas;
+using System.Configuration;
 
 namespace xmpponent.Stanzas
 {
 	public class InfoQuery : Stanza
 	{
-		public string Id = "";
-		public string To = "";
-		public string From = "";
-		public string qType = "";
+		
+		public string qType
+		{
+			get { if(!Attributes.ContainsKey("type")) { return ""; } else { return Attributes["type"]; } }
+			set { if(!Attributes.ContainsKey("type")) { Attributes.Add("type", value); } else { Attributes["type"] = value; } }
+		}
 
-		public string iType = "";
+		public string iType
+		{
+			get
+			{
+				if(Elements.ContainsKey("query"))
+				{
+					if(Elements["query"].Attributes.ContainsKey("xmlns"))
+					{
+						if(Elements["query"].Attributes["xmlns"] == "http://jabber.org/protocol/disco#info") { return "disco#info"; }
+					}
+				}
+
+				if(Elements.ContainsKey("vcard")) { return "vcard"; }
+
+				return "";
+			}
+		}
 
 		public InfoQuery ()
 		{
 		}
 
-		public static InfoQuery Parse(string InBuffer)
+		/*public static InfoQuery Parse(string InBuffer)
 		{
 			InfoQuery toret = new InfoQuery();
 			toret.RawXML = InBuffer + "</iq>";
@@ -42,7 +61,7 @@ namespace xmpponent.Stanzas
 			else if(InBuffer.IndexOf("<vCard xmlns='vcard-temp'/>") > -1) { toret.iType = "vcard"; }
 
 			return toret;
-		}
+		}*/
 	}
 }
 

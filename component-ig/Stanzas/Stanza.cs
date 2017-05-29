@@ -220,7 +220,7 @@ namespace xmpponent.Stanzas
 			return toret;
 		}*/
 
-		private static Stanza CollectIq(ref string InBuffer)
+		/*private static Stanza CollectIq(ref string InBuffer)
 		{
 			if(InBuffer.IndexOf("</iq>") == -1) { return null; }
 			string prline = InBuffer.Substring(0, InBuffer.IndexOf("</iq>"));
@@ -229,7 +229,7 @@ namespace xmpponent.Stanzas
 			InfoQuery toret = InfoQuery.Parse(prline);
 			//toret.RawXML = prline + "</iq>";
 			return toret;
-		}
+		}*/
 
 		private static StreamError CollectStreamError(ref string InBuffer)
 		{
