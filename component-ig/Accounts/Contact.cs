@@ -16,6 +16,12 @@ namespace xmpponent.Accounts
 		public Contact ()
 		{
 		}
+
+		public static string BareJID(string jid)
+		{
+			if(jid.Contains("/")) { return jid.Substring(0, jid.IndexOf('/')); }
+			return jid;
+		}
 	}
 }
 

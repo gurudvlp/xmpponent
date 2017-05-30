@@ -1,14 +1,12 @@
-﻿<Properties StartupItem="component-ig/xmpponent.csproj">
+﻿<Properties StartupItem="ExampleBots/ExampleBots.csproj">
   <AuthorInfo Name="Brian Murphy" Email="brian@gurudigitalsolutions.com" Copyright="2017 Brian Murphy" Company="" Trademark="" />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="component-ig/Component/Component.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="component-ig/Accounts/Account.cs">
     <Files>
-      <File FileName="component-ig/Program.cs" Line="42" Column="161" />
-      <File FileName="component-ig/Component/EchoBots.cs" Line="153" Column="74" />
-      <File FileName="component-ig/Component/Component.cs" Line="573" Column="1" />
-      <File FileName="component-ig/Stanzas/Stanza.cs" Line="133" Column="6" />
-      <File FileName="component-ig/Stanzas/Message.cs" Line="66" Column="4" />
-      <File FileName="component-ig/Stanzas/InfoQuery.cs" Line="42" Column="92" />
+      <File FileName="ExampleBots/Program.cs" Line="2" Column="17" />
+      <File FileName="ExampleBots/EchoBots.cs" Line="1" Column="1" />
+      <File FileName="component-ig/Program.cs" Line="13" Column="34" />
+      <File FileName="component-ig/Accounts/Account.cs" Line="55" Column="17" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

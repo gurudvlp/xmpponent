@@ -2,6 +2,8 @@
 using xmpponent.Stanzas;
 using System.IO;
 using System.Collections.Generic;
+using System.Security.AccessControl;
+using xmpponent.Accounts;
 
 namespace xmpponent
 {
@@ -29,7 +31,10 @@ namespace xmpponent
 				while((line = file.ReadLine()) != null)
 				{
 					line = line.Trim();
-					if(line != String.Empty && !Subscribers.Contains(line)) { Subscribers.Add(line); }
+					if(line != String.Empty && !Subscribers.Contains(line))
+					{ 
+						Subscribers.Add(line);
+					}
 				}
 
 				file.Close();
