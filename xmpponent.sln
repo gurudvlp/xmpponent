@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xmpponent", "component-ig\xmpponent.csproj", "{0D6B2577-DF12-4723-B0DC-087882CC2B0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xmpponent", "xmpponent\xmpponent.csproj", "{0D6B2577-DF12-4723-B0DC-087882CC2B0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleBots", "ExampleBots\ExampleBots.csproj", "{DBE60677-8A4C-4490-92AD-593C23CEFC2D}"
 EndProject

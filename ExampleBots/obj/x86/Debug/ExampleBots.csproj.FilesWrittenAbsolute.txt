@@ -1,7 +1,5 @@
 /home/guru/Projects/xmpponent/ExampleBots/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
-/home/guru/Projects/xmpponent/ExampleBots/bin/Debug/ExampleBots.exe.mdb
-/home/guru/Projects/xmpponent/ExampleBots/bin/Debug/ExampleBots.exe
+/home/guru/Projects/xmpponent/bin/Debug/ExampleBots.exe.mdb
+/home/guru/Projects/xmpponent/bin/Debug/ExampleBots.exe
 /home/guru/Projects/xmpponent/ExampleBots/obj/x86/Debug/ExampleBots.exe
 /home/guru/Projects/xmpponent/ExampleBots/obj/x86/Debug/ExampleBots.exe.mdb
-/home/guru/Projects/xmpponent/ExampleBots/bin/Debug/xmpponent.dll
-/home/guru/Projects/xmpponent/ExampleBots/bin/Debug/xmpponent.dll.mdb

@@ -1,0 +1,5 @@
+/home/guru/Projects/xmpponent/xmpponent/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/guru/Projects/xmpponent/bin/Debug/xmpponent.dll.mdb
+/home/guru/Projects/xmpponent/bin/Debug/xmpponent.dll
+/home/guru/Projects/xmpponent/xmpponent/obj/x86/Debug/xmpponent.dll
+/home/guru/Projects/xmpponent/xmpponent/obj/x86/Debug/xmpponent.dll.mdb
