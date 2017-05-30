@@ -74,19 +74,7 @@ namespace xmpponent.Stanzas
 			string elname = "";
 			for(int el = 1; el < InBuffer.Length; el++)
 			{
-				/*if(InBuffer.Substring(el, 1) == "/")
-				{
 
-				}
-				else if(InBuffer.Substring(el, 1) == " ")
-				{
-
-				}
-				else if(InBuffer.Substring(el, 1) == ">")
-				{
-
-				}
-				else*/
 				if(InBuffer.Substring(el, 1) != "/"
 					&& InBuffer.Substring(el, 1) != " "
 					&& InBuffer.Substring(el, 1) != ">")
@@ -134,11 +122,19 @@ namespace xmpponent.Stanzas
 				for(int eat = 1; eat < attrs.Length; eat++)
 				{
 					string[] kvp = attrs[eat].Split(new char[]{'='}, 2);
-					string nval = kvp[1].Trim().Substring(1);
-					if(nval.EndsWith("/")) { nval = nval.Substring(0, nval.Length - 1); }
-					nval = nval.Substring(0, nval.Length - 1);
-					toret.Attributes.Add(kvp[0].ToLower().Trim(), nval);
-					//Console.WriteLine("{0}: kvp {1} = '{2}'", toret.Element, kvp[0].ToLower().Trim(), nval);
+
+					if(kvp.Length > 1)
+					{
+						string nval = kvp[1].Trim().Substring(1);
+						if(nval.EndsWith("/")) { nval = nval.Substring(0, nval.Length - 1); }
+						nval = nval.Substring(0, nval.Length - 1);
+						toret.Attributes.Add(kvp[0].ToLower().Trim(), nval);
+						//Console.WriteLine("{0}: kvp {1} = '{2}'", toret.Element, kvp[0].ToLower().Trim(), nval);
+					}
+					else
+					{
+						Console.WriteLine("attrs kvp invalled length {0}", attrs[eat]);
+					}
 				}
 			}
 			//Console.WriteLine(toret.Element);

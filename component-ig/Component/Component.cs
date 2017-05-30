@@ -189,6 +189,18 @@ namespace xmpponent
 						}
 						else if(inStanza.GetType() == typeof(Stanzas.Presence))
 						{
+							DebugWrite("Presence stanza received from server.");
+							DebugWrite("Attributes:");
+							foreach(KeyValuePair<string, string> kvp in inStanza.Attributes)
+							{
+								DebugWrite(String.Format("\t{0} = '{1}'", kvp.Key, kvp.Value));
+							}
+							DebugWrite("Elements:");
+							foreach(KeyValuePair<string, Stanzas.Stanza> kvp in inStanza.Elements)
+							{
+								DebugWrite(String.Format("\t{0} = [{1}]", kvp.Key, kvp.Value.Element));
+							}
+							DebugWrite(String.Format("Presence internalXML {0}", inStanza.InternalXML));
 							onPresenceReceived((Stanzas.Presence)inStanza);
 						}
 						else if(inStanza.GetType() == typeof(Stanzas.Message))
