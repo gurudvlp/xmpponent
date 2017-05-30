@@ -45,10 +45,13 @@
     <Compile Include="Stanzas\StreamEnd.cs" />
     <Compile Include="Stanzas\Receipt.cs" />
     <Compile Include="Stanzas\InfoQuery.cs" />
+    <Compile Include="Accounts\Account.cs" />
+    <Compile Include="Accounts\Contact.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Stanzas\" />
     <Folder Include="Component\" />
+    <Folder Include="Accounts\" />
   </ItemGroup>
 </Project>

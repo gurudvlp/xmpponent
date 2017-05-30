@@ -8,6 +8,8 @@ namespace xmpponent
 	public class EchoBots : Component
 	{
 		public List<string> Subscribers = new List<string>();
+		DateTime UnixEpoc;
+		int LastUpdate;
 
 		public EchoBots ()
 		{
@@ -32,6 +34,9 @@ namespace xmpponent
 
 				file.Close();
 			}
+
+			UnixEpoc = new DateTime(1970, 1, 1);
+
 		}
 
 		public override void onConnect ()
@@ -60,6 +65,31 @@ namespace xmpponent
 		public override void onUpdate ()
 		{
 			//	Update things here.
+			Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(UnixEpoc)).TotalSeconds;
+			if(LastUpdate == 0) { LastUpdate = unixTimestamp; }
+
+			if(unixTimestamp - LastUpdate > 300)
+			{
+				//	Update all subscribers every so often about the echo bot's
+				//	presence.
+				DebugInfo("::Sending presence status to all subscribers.");
+				LastUpdate = unixTimestamp;
+
+				Presence presence = new Presence();
+				presence.Available = true;
+				presence.pType = "";
+				presence.ShowType = Presence.ShowAvailable;
+				presence.Status = "Stop copying me";
+				presence.From = "echo@" + ComponentAddress.ToLower();
+
+				foreach(string subscriber in Subscribers)
+				{
+					DebugWrite(String.Format("::> {0}", subscriber));
+					presence.To = subscriber;
+					presence.Id = Stanza.NextStanzaID;
+					SendPresence(presence);
+				}
+			}
 		}
 
 		public override void onMessageReceived (xmpponent.Stanzas.Message message)
@@ -94,8 +124,8 @@ namespace xmpponent
 		public override void onPresenceProbe (Presence presence)
 		{
 			DebugInfo(String.Format("[{0}] is probing for [{1}]'s presence.", presence.From, presence.To));
-			DebugInfo(presence.RawXML);
-			DebugInfo("--------------------");
+			//DebugInfo(presence.RawXML);
+			//DebugInfo("--------------------");
 
 			Presence npres = new Presence();
 			npres.From = presence.To;

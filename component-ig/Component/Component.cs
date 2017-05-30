@@ -9,12 +9,15 @@ using System.Security.Permissions;
 using System.Diagnostics;
 using System.Collections.Generic;
 using xmpponent.Stanzas;
+using System.Security.AccessControl;
 
 namespace xmpponent
 {
 	public class Component
 	{
 		public static Component Eng;
+
+		public Dictionary<string, Accounts.Account> ComponentAccounts;
 
 		private string _ComponentAddress = "";
 		public string ComponentAddress
@@ -76,6 +79,7 @@ namespace xmpponent
 
 		public Component ()
 		{
+			ComponentAccounts = new Dictionary<string, xmpponent.Accounts.Account>();
 		}
 
 		public void Run()
@@ -190,7 +194,7 @@ namespace xmpponent
 						}
 						else if(inStanza.GetType() == typeof(Stanzas.Presence))
 						{
-							DebugWrite("Presence stanza received from server.");
+							/*DebugWrite("Presence stanza received from server.");
 							DebugWrite("Attributes:");
 							foreach(KeyValuePair<string, string> kvp in inStanza.Attributes)
 							{
@@ -201,7 +205,7 @@ namespace xmpponent
 							{
 								DebugWrite(String.Format("\t{0} = [{1}]", kvp.Key, kvp.Value.Element));
 							}
-							DebugWrite(String.Format("Presence internalXML {0}", inStanza.InternalXML));
+							DebugWrite(String.Format("Presence internalXML {0}", inStanza.InternalXML));*/
 							onPresenceReceived((Stanzas.Presence)inStanza);
 						}
 						else if(inStanza.GetType() == typeof(Stanzas.Message))
@@ -449,6 +453,11 @@ namespace xmpponent
 			return true;
 		}
 
+		/// <summary>
+		/// Sends a receipt for a message.
+		/// </summary>
+		/// <returns><c>true</c>, if receipt was sent, <c>false</c> otherwise.</returns>
+		/// <param name="receipt">Receipt.</param>
 		public bool SendReceipt(Stanzas.Receipt receipt)
 		{
 			if(receipt.To == "")
@@ -617,7 +626,9 @@ namespace xmpponent
 		/// <param name="presence">Presence.</param>
 		public virtual void onPresenceAvailable(Stanzas.Presence presence)
 		{
-			DebugWrite("onPresenceAvailable not implemented.");
+			string tobjid = Accounts.Contact.BareJID(presence.To);
+
+			if(ComponentAccounts.ContainsKey(tobjid)) { ComponentAccounts[tobjid].onPresenceAvailable(presence); }
 		}
 
 		/// <summary>
