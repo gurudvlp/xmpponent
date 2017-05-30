@@ -42,6 +42,17 @@ namespace xmpponent.Stanzas
 		public string InternalXML
 		{ get { return _InternalXML; } set { _InternalXML = value; } }
 
+		private static ulong _NextStanzaID = 314;
+		public static string NextStanzaID
+		{
+			get
+			{
+				string toret = "xmpponent-id-" + _NextStanzaID.ToString();
+				_NextStanzaID++;
+				return toret;
+			}
+		}
+
 		public Stanza ()
 		{
 			Attributes = new Dictionary<string, string>();
@@ -144,6 +155,8 @@ namespace xmpponent.Stanzas
 
 			return toret;
 		}
+
+
 
 		public static void GetTagKeyVal(string tagkeyval, out string key, out string val)
 		{

@@ -8,6 +8,7 @@ using System.Configuration;
 using System.Security.Permissions;
 using System.Diagnostics;
 using System.Collections.Generic;
+using xmpponent.Stanzas;
 
 namespace xmpponent
 {
@@ -278,6 +279,11 @@ namespace xmpponent
 				{
 					TcpSocket = new TcpClient(ServerAddress, Port);
 
+					if(!TcpSocket.Connected)
+					{
+						DebugWrite("Connection to xmpp server failed.");
+						return false;
+					}
 					DebugWrite(String.Format("Connected to {0}:{1}", ServerAddress, Port));
 
 					SockStream = TcpSocket.GetStream();
@@ -341,7 +347,11 @@ namespace xmpponent
 		}
 
 
-
+		/// <summary>
+		/// Sends a pre-created message to another xmpp user.
+		/// </summary>
+		/// <returns><c>true</c>, if message was sent, <c>false</c> otherwise.</returns>
+		/// <param name="message">Message.</param>
 		public bool SendMessage(Stanzas.Message message)
 		{
 			if(message.To == "")
@@ -370,11 +380,50 @@ namespace xmpponent
 				StanzaID++;
 			}
 
-			if(message.Thread == "") { message.Thread = "doo-comp-threadx"; }
+			if(message.Thread == "") { message.Thread = "doo-comp-thread-" + StanzaID.ToString(); }
+			if(message.Id == "")
+			{
+				message.Id = "doo-comp-mid-" + StanzaID.ToString();
+				StanzaID++;
+			}
 
 			Byte[] data = System.Text.Encoding.ASCII.GetBytes(message.GenerateXML());
 			SockStream.Write(data, 0, data.Length);
 			return true;
+		}
+
+		/// <summary>
+		/// Sends a new message.
+		/// </summary>
+		/// <returns><c>true</c>, if message was sent, <c>false</c> otherwise.</returns>
+		/// <param name="tojid">Recipient's JID.</param>
+		/// <param name="fromjid">Sender's JID.</param>
+		/// <param name="body">Body of message.</param>
+		public bool SendMessage(string tojid, string fromjid, string body)
+		{
+			if(tojid == "")
+			{
+				DebugWrite("SendMessage: Failed due to no recipient.");
+				return false;
+			}
+
+			if(fromjid == "")
+			{
+				DebugWrite("SendMessage: Failed due to no sender.");
+				return false;
+			}
+
+			Message message = new Message();
+			message.Body = body;
+			message.To = tojid;
+			message.From = fromjid;
+			message.mType = "chat";
+			message.StanzaBy = fromjid;
+
+			message.StanzaId = Stanza.NextStanzaID;
+			message.Id = Stanza.NextStanzaID;
+
+			return SendMessage(message);
 		}
 
 		public bool SendPresence(Stanzas.Presence presence)
