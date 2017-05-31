@@ -8,5 +8,7 @@ To Use With Prosody:
 First, create a subdomain for your component, such as component.example.com.
 In your configuration file, add something like:
 
+```
 Component "component.example.com"
 	component_secret = "my secret pass phrase"
+```
