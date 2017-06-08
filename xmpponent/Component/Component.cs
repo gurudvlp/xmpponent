@@ -269,7 +269,7 @@ namespace xmpponent
 					}
 				}
 
-				if(dorun) { onUpdate(); }
+				if(dorun && Handsshaken) { onUpdate(); }
 
 				Thread.Sleep(1);
 			}

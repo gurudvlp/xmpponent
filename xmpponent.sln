@@ -153,5 +153,6 @@ Global
 		$24.IncludeInstanceMembers = True
 		$24.IncludeStaticEntities = True
 		description = Component framework for XMPP servers.
+		version = 0.1.01
 	EndGlobalSection
 EndGlobal
