@@ -440,6 +440,11 @@ namespace xmpponent
 			return SendMessage(message);
 		}
 
+		/// <summary>
+		/// Sends a pre-created <see cref="xmpponent.Stanzas.Presence"/>.
+		/// </summary>
+		/// <returns><c>true</c>, if presence was sent, <c>false</c> otherwise.</returns>
+		/// <param name="presence">Presence.</param>
 		public bool SendPresence(Stanzas.Presence presence)
 		{
 			if(presence.From == "")
@@ -455,12 +460,63 @@ namespace xmpponent
 			}
 
 			string tosend = presence.GenerateXML();
-			/*DebugWrite("-------------------");
-			DebugWrite(tosend);
-			DebugWrite("-------------------");*/
 			Byte[] data = System.Text.Encoding.ASCII.GetBytes(tosend);
-			SockStream.Write(data, 0, data.Length);
+
+			try
+			{
+				SockStream.Write(data, 0, data.Length);
+			}
+			catch(Exception ex)
+			{
+				DebugWrite("SendPresence: Exception during write.");
+				DebugWrite(ex.Message);
+				return false;
+			}
+
 			return true;
+		}
+
+		/// <summary>
+		/// Creates a presence object and sends it to the specified JID.
+		/// </summary>
+		/// <returns><c>true</c>, if presence was sent, <c>false</c> otherwise.</returns>
+		/// <param name="fromjid">From JID.</param>
+		/// <param name="tojid">To JID.</param>
+		/// <param name="showtype"><see cref="Stanzas.Presence.ShowType"/> Type of availability.</param>
+		public bool SendPresence(string fromjid, string tojid, uint showtype)
+		{
+			return SendPresence(fromjid, tojid, showtype, "");
+		}
+
+		/// <summary>
+		/// Creates a presence object, and sends it to the specified JID.
+		/// </summary>
+		/// <returns><c>true</c>, if presence was sent, <c>false</c> otherwise.</returns>
+		/// <param name="fromjid">From JID.</param>
+		/// <param name="tojid">To JID.</param>
+		/// <param name="showtype"><see cref="Stanzas.Presence.ShowType"/> Type of availability.</param>
+		/// <param name="status">Status Message.</param>
+		public bool SendPresence(string fromjid, string tojid, uint showtype, string status)
+		{
+			Presence pres = new Presence();
+			pres.From = fromjid;
+			pres.To = tojid;
+			pres.Status = status;
+
+			if(showtype == Presence.ShowUnavailable)
+			{
+				pres.pType = "unavailable";
+			}
+			else
+			{
+				pres.pType = "";
+				pres.ShowType = showtype;
+				pres.Available = true;
+			}
+
+			pres.Id = Stanza.NextStanzaID;
+
+			return SendPresence(pres);
 		}
 
 		/// <summary>

@@ -10,6 +10,7 @@ namespace xmpponent.Stanzas
 		public static uint ShowXA = 3;
 		public static uint ShowDND = 4;
 		public static uint ShowAvailable = 5;
+		public static uint ShowUnavailable = 6;
 
 		public string pType
 		{
