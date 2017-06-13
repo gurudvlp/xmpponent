@@ -69,6 +69,24 @@ namespace xmpponent
 		public bool AutoSendReceipt
 		{ get { return _AutoSendReceipt; } set { _AutoSendReceipt = value; } }
 
+		private bool _DieOnNullStanza = true;
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="xmpponent.Component"/> should exit when a
+		/// null/unparsable stanza is received.
+		/// </summary>
+		/// <value><c>true</c> if die on null stanza; otherwise, <c>false</c>.</value>
+		public bool DieOnNullStanza
+		{ get { return _DieOnNullStanza; } set { _DieOnNullStanza = value; } }
+
+		private bool _ClearBufferOnNullStanza = true;
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="xmpponent.Component"/> should clear the
+		/// incoming buffer when a null/unparsable stanza is received.  This setting has no effect if
+		/// <see cref="xmpponent.Component.DieOnNullStanza"/> is set to true.
+		/// </summary>
+		/// <value><c>true</c> if clear buffer on null stanza; otherwise, <c>false</c>.</value>
+		public bool ClearBufferOnNullStanza
+		{ get { return _ClearBufferOnNullStanza; } set { _ClearBufferOnNullStanza = value; } }
 
 		public TcpClient TcpSocket = null;
 		public NetworkStream SockStream = null;
@@ -189,39 +207,31 @@ namespace xmpponent
 
 						if(inStanza == null)
 						{
-							DebugWrite("Incoming stanza was not parsed (it's null).");
-							DebugWrite(InBuffer);
+							if(DieOnNullStanza)
+							{
+								DebugWrite("Incoming stanza was not parsed (it's null).");
+								DebugWrite(InBuffer);
+
+								dorun = false;
+							}
+							else
+							{
+								onNullStanzaReceived(ref InBuffer);
+							}
+
+							if(ClearBufferOnNullStanza)
+							{
+								InBuffer = "";
+							}
 						}
 						else if(inStanza.GetType() == typeof(Stanzas.Presence))
 						{
-							/*DebugWrite("Presence stanza received from server.");
-							DebugWrite("Attributes:");
-							foreach(KeyValuePair<string, string> kvp in inStanza.Attributes)
-							{
-								DebugWrite(String.Format("\t{0} = '{1}'", kvp.Key, kvp.Value));
-							}
-							DebugWrite("Elements:");
-							foreach(KeyValuePair<string, Stanzas.Stanza> kvp in inStanza.Elements)
-							{
-								DebugWrite(String.Format("\t{0} = [{1}]", kvp.Key, kvp.Value.Element));
-							}
-							DebugWrite(String.Format("Presence internalXML {0}", inStanza.InternalXML));*/
+							
 							onPresenceReceived((Stanzas.Presence)inStanza);
 						}
 						else if(inStanza.GetType() == typeof(Stanzas.Message))
 						{
-							//DebugWrite("Message stanza received from server.");
-							/*DebugWrite("Attributes:");
-							foreach(KeyValuePair<string, string> kvp in inStanza.Attributes)
-							{
-								DebugWrite(String.Format("\t{0} = '{1}'", kvp.Key, kvp.Value));
-							}
-							DebugWrite("Elements (body):");
-							foreach(KeyValuePair<string, Stanzas.Stanza> kvp in inStanza.Elements["body"].Elements)
-							{
-								DebugWrite(String.Format("\t{0} = [{1}]", kvp.Key, kvp.Value.Element));
-							}
-							DebugWrite(String.Format("body internalXML {0}", inStanza.Elements["body"].InternalXML));*/
+							
 
 							if(!((Stanzas.Message)inStanza).IsReceipt
 								&& !((Stanzas.Message)inStanza).IsPaused)
@@ -724,6 +734,17 @@ namespace xmpponent
 		public virtual void onUndefinedStanzaReceived(Stanzas.Stanza stanza)
 		{
 			DebugWrite("Undefined/blank stanza received from server.");
+		}
+
+		/// <summary>
+		/// Called if a stanza is received that is either null or unparsable.
+		/// This callback is only called if <see cref="xmpponent.Component.DieOnNullStanza"/> 
+		/// is set to false.
+		/// </summary>
+		/// <param name="InBuffer">In buffer.</param>
+		public virtual void onNullStanzaReceived(ref string InBuffer)
+		{
+			DebugWrite("onNullStanzaReceived not implemented.");
 		}
 	}
 }
