@@ -1,5 +1,6 @@
 ﻿using System;
 using xmpponent.Stanzas;
+using xmpponent.Accounts;
 
 namespace xmpponent.Stanzas
 {
@@ -38,8 +39,8 @@ namespace xmpponent.Stanzas
 			
 			Receipt toret = new Receipt();
 
-			toret.From = message.From;
-			toret.To = message.To;
+			toret.From = Contact.BareJID(message.To);
+			toret.To = Contact.BareJID(message.From);
 			toret.MessageID = message.Id;
 			toret.Thread = message.Thread;
 
