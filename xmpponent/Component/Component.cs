@@ -88,6 +88,11 @@ namespace xmpponent
 		public bool ClearBufferOnNullStanza
 		{ get { return _ClearBufferOnNullStanza; } set { _ClearBufferOnNullStanza = value; } }
 
+		/// <summary>
+		/// The outbound stanza queue.
+		/// </summary>
+		private Queue<Stanza> StanzaQueue = new Queue<Stanza>();
+
 		public TcpClient TcpSocket = null;
 		public NetworkStream SockStream = null;
 
@@ -279,7 +284,11 @@ namespace xmpponent
 					}
 				}
 
-				if(dorun && Handsshaken) { onUpdate(); }
+				if(dorun && Handsshaken) 
+				{ 
+					onUpdate(); 
+					SendQueuedStanzas();
+				}
 
 				Thread.Sleep(1);
 			}
@@ -401,8 +410,8 @@ namespace xmpponent
 				StanzaID++;
 			}
 
-			Byte[] data = System.Text.Encoding.ASCII.GetBytes(message.GenerateXML());
-			SockStream.Write(data, 0, data.Length);
+			SendStanza(message);
+
 			return true;
 		}
 
@@ -459,19 +468,7 @@ namespace xmpponent
 				return false;
 			}
 
-			string tosend = presence.GenerateXML();
-			Byte[] data = System.Text.Encoding.ASCII.GetBytes(tosend);
-
-			try
-			{
-				SockStream.Write(data, 0, data.Length);
-			}
-			catch(Exception ex)
-			{
-				DebugWrite("SendPresence: Exception during write.");
-				DebugWrite(ex.Message);
-				return false;
-			}
+			SendStanza(presence);
 
 			return true;
 		}
@@ -544,15 +541,52 @@ namespace xmpponent
 				return false;
 			}
 
-			string tosend = receipt.GenerateXML();
-
-			/*DebugWrite("Outgoing Message Receipt:");
-			DebugWrite(tosend);
-			DebugWrite("----------------------------");*/
-			Byte[] data = System.Text.Encoding.ASCII.GetBytes(tosend);
-			SockStream.Write(data, 0, data.Length);
+			SendStanza(receipt);
 
 			return true;
+		}
+
+		/// <summary>
+		/// Adds a stanza to a queue of stanzas to be sent to the xmpp server at the
+		/// next opportunity.
+		/// </summary>
+		/// <returns><c>true</c>, if stanza was sent, <c>false</c> otherwise.</returns>
+		/// <param name="stanza">Stanza</param>
+		public virtual bool SendStanza(Stanza stanza)
+		{
+			if(stanza == null) { return false; }
+			
+			StanzaQueue.Enqueue(stanza);
+			return true;
+		}
+
+		protected virtual void SendQueuedStanzas()
+		{
+			if(StanzaQueue.Count == 0) { return; }
+
+			if(!TcpSocket.Connected)
+			{
+				//DebugInfo("SendQueuedStanzas: Failed; Connection to server lost.");
+				return;
+			}
+
+			while(StanzaQueue.Count > 0)
+			{
+				Stanza outstanza = StanzaQueue.Dequeue();
+
+				string tosend = outstanza.GenerateXML();
+
+				Byte[] data = System.Text.Encoding.ASCII.GetBytes(tosend);
+
+				try	{ SockStream.Write(data, 0, data.Length); }
+				catch(Exception ex)
+				{
+					DebugWrite("[DEBUG] SendQueuedStanza Write Failed");
+					DebugWrite(String.Format("[DEBUG] Base Exception:\n{0}", ex.GetBaseException().Message));
+					DebugWrite(String.Format("[DEBUG] Inner Exception:\n{0}", ex.InnerException.Message));
+					DebugWrite("------------------------------");
+				}
+			}
 		}
 
 		/// <summary>

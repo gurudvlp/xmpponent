@@ -144,7 +144,7 @@ namespace xmpponent.Stanzas
 					}
 					else
 					{
-						Console.WriteLine("attrs kvp invalled length {0}", attrs[eat]);
+						Console.WriteLine("attrs kvp invalid length {0}", attrs[eat]);
 					}
 				}
 			}
