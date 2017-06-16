@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using xmpponent.Stanzas;
 using System.Security.AccessControl;
+using System.IO;
 
 namespace xmpponent
 {
@@ -582,9 +583,15 @@ namespace xmpponent
 				catch(Exception ex)
 				{
 					DebugWrite("[DEBUG] SendQueuedStanza Write Failed");
+					DebugWrite(String.Format("[DEBUG] Message:\n{0}", ex.Message));
 					DebugWrite(String.Format("[DEBUG] Base Exception:\n{0}", ex.GetBaseException().Message));
 					DebugWrite(String.Format("[DEBUG] Inner Exception:\n{0}", ex.InnerException.Message));
 					DebugWrite("------------------------------");
+				}
+
+				if(!TcpSocket.Client.Connected)
+				{
+					DebugInfo("[INFO] Connection to XMPP server lost");
 				}
 			}
 		}
