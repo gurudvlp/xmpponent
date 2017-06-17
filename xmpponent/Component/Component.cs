@@ -89,6 +89,26 @@ namespace xmpponent
 		public bool ClearBufferOnNullStanza
 		{ get { return _ClearBufferOnNullStanza; } set { _ClearBufferOnNullStanza = value; } }
 
+		private bool _LogIncomingData = false;
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="xmpponent.Component"/> should log all
+		/// incoming data.
+		/// </summary>
+		/// <value><c>true</c> if log incoming data; otherwise, <c>false</c>.</value>
+		public bool LogIncomingData
+		{ get { return _LogIncomingData; } set { _LogIncomingData = value; } }
+
+		private string _IncomingLogFile = "";
+		/// <summary>
+		/// Gets or sets the incoming log file.  This value is meaningless if <see cref="xmpponent.Component.LogIncomingData"/>
+		/// is set to false.
+		/// </summary>
+		/// <value>The incoming log file.</value>
+		public string IncomingLogFile
+		{ get { return _IncomingLogFile; } set { _IncomingLogFile = value; } }
+
+
+
 		/// <summary>
 		/// The outbound stanza queue.
 		/// </summary>
@@ -134,8 +154,12 @@ namespace xmpponent
 			{
 				if(SockStream.DataAvailable)
 				{
+					string rbuf = "";
 					int rlen = SockStream.Read(readbuf, 0, readbuf.Length);
-					InBuffer += System.Text.Encoding.ASCII.GetString(readbuf, 0, rlen);
+					rbuf = System.Text.Encoding.ASCII.GetString(readbuf, 0, rlen);
+					InBuffer += rbuf;
+
+					if(LogIncomingData)	{ IncomingLogWrite(rbuf); }
 				}
 
 				if(InBuffer.Length > 0)
@@ -370,6 +394,27 @@ namespace xmpponent
 			return sb.ToString();
 		}
 
+		/// <summary>
+		/// Writes the supplied data to a log file.  This method is called when data is
+		/// received from the xmpp server.
+		/// </summary>
+		/// <param name="InData">Incoming Data.</param>
+		public virtual void IncomingLogWrite(string InData)
+		{
+			if(!LogIncomingData) { return; }
+			if(string.IsNullOrEmpty(IncomingLogFile)) { return; }
+
+			try	{ File.AppendAllText(IncomingLogFile, InData); }
+			catch(Exception ex)
+			{
+				DebugWrite("[DEBUG] IncomingLogWrite failed.");
+				DebugWrite(String.Format("[DEBUG] Exception Message:\n{0}", ex.Message));
+				DebugWrite("[DEBUG] Disabling incoming data logging.");
+
+				LogIncomingData = false;
+			}
+
+		}
 
 		/// <summary>
 		/// Sends a pre-created message to another xmpp user.

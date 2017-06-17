@@ -1,13 +1,14 @@
 ﻿<Properties StartupItem="ExampleBots/ExampleBots.csproj">
   <AuthorInfo Name="Brian Murphy" Email="brian@gurudigitalsolutions.com" Copyright="Copyright 2017 Brian Murphy" Company="" Trademark="" />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="xmpponent/Stanzas/Receipt.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="xmpponent/Component/Component.cs">
     <Files>
       <File FileName="ExampleBots/Program.cs" Line="1" Column="1" />
       <File FileName="ExampleBots/EchoBots.cs" Line="1" Column="1" />
-      <File FileName="xmpponent/Component/Component.cs" Line="250" Column="59" />
-      <File FileName="xmpponent/Stanzas/Presence.cs" Line="13" Column="42" />
+      <File FileName="xmpponent/Component/Component.cs" Line="579" Column="5" />
+      <File FileName="xmpponent/Stanzas/Presence.cs" Line="1" Column="1" />
       <File FileName="xmpponent/Stanzas/Receipt.cs" Line="34" Column="4" />
+      <File FileName="xmpponent/Stanzas/Stanza.cs" Line="147" Column="42" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
