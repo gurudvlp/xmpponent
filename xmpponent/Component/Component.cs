@@ -159,7 +159,7 @@ namespace xmpponent
 					rbuf = System.Text.Encoding.ASCII.GetString(readbuf, 0, rlen);
 					InBuffer += rbuf;
 
-					if(LogIncomingData)	{ IncomingLogWrite(rbuf); }
+					onDataReceived(rbuf);
 				}
 
 				if(InBuffer.Length > 0)
@@ -399,7 +399,7 @@ namespace xmpponent
 		/// received from the xmpp server.
 		/// </summary>
 		/// <param name="InData">Incoming Data.</param>
-		public virtual void IncomingLogWrite(string InData)
+		public virtual void onDataReceived(string InData)
 		{
 			if(!LogIncomingData) { return; }
 			if(string.IsNullOrEmpty(IncomingLogFile)) { return; }
